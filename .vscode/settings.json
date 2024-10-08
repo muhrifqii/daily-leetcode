@@ -2,5 +2,10 @@
     "makefile.configureOnOpen": true,
     "files.associations": {
         "iosfwd": "cpp"
+    },
+    "gopls": {
+        "build.env": {
+            "CGO_ENABLED": "0",
+        }
     }
 }
