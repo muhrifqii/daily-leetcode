@@ -26,7 +26,6 @@ ij_editorconfig_space_before_comma = false
 ij_editorconfig_spaces_around_assignment_operators = true
 
 [*.java]
-indent_size = 4
 ij_continuation_indent_size = 4
 ij_java_ternary_operation_signs_on_next_line = true
 ij_java_case_statement_on_separate_line = true
@@ -42,6 +41,12 @@ ij_java_spaces_around_multiplicative_operators = true
 ij_java_spaces_around_relational_operators = true
 ij_java_spaces_around_shift_operators = true
 ij_java_spaces_around_type_bounds_in_type_parameters = true
+
+[*.kt]
+ij_kotlin_code_style_defaults = KOTLIN_OFFICIAL
+ij_kotlin_allow_trailing_comma = true
+ij_kotlin_allow_trailing_comma_on_call_site = false
+ij_kotlin_assignment_wrap = normal
 
 [*.{c++,cc,cpp,cxx,h,h++,hh,hpp,hxx,inl,ipp,tlh,tli}]
 cpp_indent_case_contents_when_block = true

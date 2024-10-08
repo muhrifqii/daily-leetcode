@@ -33,8 +33,9 @@ define RUN_SOLUTION
 			cat $(OUTPUT_FILE); \
 			exit 1; \
 		fi; \
-		if ! diff -y $(OUTPUT_FILE) $(DAILY_PATH)/expected.txt; then \
+		if ! diff -q $(OUTPUT_FILE) $(DAILY_PATH)/expected.txt; then \
 			echo "Output differs for $$file"; \
+			diff -y $(OUTPUT_FILE) $(DAILY_PATH)/expected.txt; \
 			exit 1; \
 		else \
 			echo "Test cases passed for $$file"; \
@@ -49,6 +50,29 @@ clean-output:
 java: clean-output
 	$(call RUN_SOLUTION,java,$(JAVA_EXEC))
 
+# Kotlin solutions
+kotlin: clean-output
+	@for file in $(DAILY_PATH)/$(SOLUTION_PATTERN).kt; do \
+		echo "Compiling $$file..."; \
+		$(KOTLIN_EXEC) $$file -include-runtime -d $(DAILY_PATH)/$$(basename $$file .kt).jar || exit 1; \
+		$(JAVA_EXEC) -jar $(DAILY_PATH)/$$(basename $$file .kt).jar < $(DAILY_PATH)/input.txt > $(OUTPUT_FILE) 2>&1; \
+		if [ $$? -ne 0 ]; then \
+			echo "Execution failed for $$file, see errors:"; \
+			cat $(OUTPUT_FILE); \
+			rm -f $(DAILY_PATH)/$$(basename $$file .kt).jar; \
+			exit 1; \
+		fi; \
+		if ! diff -q $(OUTPUT_FILE) $(DAILY_PATH)/expected.txt; then \
+			echo "Output differs for $$file"; \
+			diff -y $(OUTPUT_FILE) $(DAILY_PATH)/expected.txt; \
+			rm -f $(DAILY_PATH)/$$(basename $$file .kt).jar; \
+			exit 1; \
+		else \
+			echo "Test cases passed for $$file"; \
+			rm -f $(DAILY_PATH)/$$(basename $$file .kt).jar; \
+		fi; \
+	done
+
 # C++ solutions
 cpp: clean-output
 	@for file in $(DAILY_PATH)/$(SOLUTION_PATTERN).cpp; do \
@@ -61,8 +85,9 @@ cpp: clean-output
 			rm -f $(DAILY_PATH)/$$(basename $$file .cpp).out; \
 			exit 1; \
 		fi; \
-		if ! diff -y $(OUTPUT_FILE) $(DAILY_PATH)/expected.txt; then \
+		if ! diff -q $(OUTPUT_FILE) $(DAILY_PATH)/expected.txt; then \
 			echo "Output differs for $$file"; \
+			diff -y $(OUTPUT_FILE) $(DAILY_PATH)/expected.txt; \
 			rm -f $(DAILY_PATH)/$$(basename $$file .cpp).out; \
 			exit 1; \
 		else \
@@ -85,8 +110,9 @@ rust: clean-output
 			cat $(OUTPUT_FILE); \
 			exit 1; \
 		fi; \
-		if ! diff -y $(OUTPUT_FILE) expected.txt; then \
+		if ! diff -q $(OUTPUT_FILE) expected.txt; then \
 			echo "Output differs for $$file"; \
+			diff -y $(OUTPUT_FILE) $(DAILY_PATH)/expected.txt; \
 			exit 1; \
 		else \
 			echo "Test cases passed for $$file"; \

@@ -38,6 +38,9 @@
 *.out
 *.app
 
+### Kotlin ###
+META-INF/
+
 ### Elixir ###
 /_build
 /cover
