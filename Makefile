@@ -53,18 +53,21 @@ java: clean-output
 cpp: clean-output
 	@for file in $(DAILY_PATH)/$(SOLUTION_PATTERN).cpp; do \
 		echo "Compiling $$file..."; \
-		$(CPP_EXEC) $$file -o $(DAILY_PATH)/$$(basename $$file .cpp) || exit 1; \
-		$(DAILY_PATH)/$$(basename $$file .cpp) < $(DAILY_PATH)/input.txt > $(OUTPUT_FILE) 2>&1; \
+		$(CPP_EXEC) $$file -o $(DAILY_PATH)/$$(basename $$file .cpp).out || exit 1; \
+		$(DAILY_PATH)/$$(basename $$file .cpp).out < $(DAILY_PATH)/input.txt > $(OUTPUT_FILE) 2>&1; \
 		if [ $$? -ne 0 ]; then \
 			echo "Execution failed for $$file, see errors:"; \
 			cat $(OUTPUT_FILE); \
+			rm -f $(DAILY_PATH)/$$(basename $$file .cpp).out; \
 			exit 1; \
 		fi; \
 		if ! diff -y $(OUTPUT_FILE) $(DAILY_PATH)/expected.txt; then \
 			echo "Output differs for $$file"; \
+			rm -f $(DAILY_PATH)/$$(basename $$file .cpp).out; \
 			exit 1; \
 		else \
 			echo "Test cases passed for $$file"; \
+			rm -f $(DAILY_PATH)/$$(basename $$file .cpp).out; \
 		fi; \
 	done
 
